@@ -1,0 +1,9 @@
+langchain-openai
+langchain-chroma
+langchain-huggingface
+langchain-core
+langchain
+langgraph
+chromadb
+sentence-transformers
+openai
