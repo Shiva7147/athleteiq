@@ -1,7 +1,8 @@
 """Core Domain Models for AthleteIQ Pro.
 
 Implements immutable Value Objects and Data Transfer Objects (DTOs)
-representing raw telemetry, workload metrics, and injury risk assessments.
+representing raw telemetry, baseline statistics, workload metrics,
+engineered feature vectors, and injury risk assessments.
 """
 
 from dataclasses import dataclass, field
@@ -56,6 +57,27 @@ class DailyTelemetry:
 
 
 @dataclass(frozen=True)
+class AthleteBaseline:
+    """Historical baseline statistical norms for an individual athlete over a 30+ day period.
+
+    Attributes:
+        athlete_id: Unique athlete identifier.
+        mean_hr_rest_bpm: Mean resting heart rate in bpm.
+        std_hr_rest_bpm: Standard deviation of resting heart rate.
+        mean_hrv_rmssd_ms: Mean HRV rMSSD in milliseconds.
+        std_hrv_rmssd_ms: Standard deviation of HRV rMSSD.
+        target_sleep_hours: Clinical target sleep duration in hours (default 8.0).
+    """
+
+    athlete_id: str
+    mean_hr_rest_bpm: float
+    std_hr_rest_bpm: float
+    mean_hrv_rmssd_ms: float
+    std_hrv_rmssd_ms: float
+    target_sleep_hours: float = 8.0
+
+
+@dataclass(frozen=True)
 class WorkloadMetrics:
     """Calculated workload analytics for an athlete over rolling windows.
 
@@ -78,6 +100,35 @@ class WorkloadMetrics:
     acwr_ewma: float
     monotony: float
     strain: float
+
+
+@dataclass(frozen=True)
+class FeatureVector:
+    """Normalized high-dimensional feature vector prepared for ML injury prediction models.
+
+    Attributes:
+        athlete_id: Unique athlete identifier.
+        feature_date: Date of feature evaluation.
+        hrv_z_score: HRV baseline deviation Z-score.
+        rhr_z_score: Resting HR baseline deviation Z-score.
+        sleep_deficit_ratio: Proportional sleep deficit relative to target.
+        acwr_ewma: Exponentially Weighted Moving Average ACWR.
+        acwr_spike_delta: Delta between EWMA ACWR and Uncoupled ACWR.
+        monotony: Training monotony index.
+        strain: Training strain index.
+        hsr_ratio: Ratio of High Speed Running distance to Total Distance.
+    """
+
+    athlete_id: str
+    feature_date: date
+    hrv_z_score: float
+    rhr_z_score: float
+    sleep_deficit_ratio: float
+    acwr_ewma: float
+    acwr_spike_delta: float
+    monotony: float
+    strain: float
+    hsr_ratio: float
 
 
 @dataclass(frozen=True)
