@@ -1,1 +1,5 @@
-"""Deterministic analytics and risk assessment services package for AthleteIQ Pro."""
+"""Services package exposing WorkloadService."""
+
+from src.services.workload_service import WorkloadService
+
+__all__ = ["WorkloadService"]
