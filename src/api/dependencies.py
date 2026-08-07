@@ -12,13 +12,17 @@ from src.ai.decision_engine import RAGDecisionEngine
 from src.database.connection import get_db_session
 from src.repositories.athlete_repo import SQLAlchemyAthleteRepository
 from src.repositories.base import BaseAthleteRepository
+from src.services.baseline_service import BaselineService
+from src.services.decision_audit_service import DecisionAuditService
 from src.services.risk_service import RiskService
 from src.services.workload_service import WorkloadService
 
 # Global service singletons
 _workload_service = WorkloadService()
 _risk_service = RiskService(workload_service=_workload_service)
+_baseline_service = BaselineService()
 _rag_engine = RAGDecisionEngine()
+_decision_audit_service = DecisionAuditService(rag_engine=_rag_engine)
 
 
 def get_repository(db: Session = Depends(get_db_session)) -> BaseAthleteRepository:
@@ -36,6 +40,16 @@ def get_risk_service() -> RiskService:
     return _risk_service
 
 
+def get_baseline_service() -> BaselineService:
+    """Dependency injection handler providing BaselineService."""
+    return _baseline_service
+
+
 def get_rag_engine() -> RAGDecisionEngine:
     """Dependency injection handler providing RAGDecisionEngine."""
     return _rag_engine
+
+
+def get_decision_audit_service() -> DecisionAuditService:
+    """Dependency injection handler providing DecisionAuditService."""
+    return _decision_audit_service
