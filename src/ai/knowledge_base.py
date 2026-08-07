@@ -5,7 +5,7 @@ overtraining syndrome, sleep debt, and injury prevention in high-performance spo
 """
 
 from typing import List
-from src.domain.schemas import Citation
+from src.models.decision import Citation
 
 SPORTS_SCIENCE_CORPUS: List[Citation] = [
     Citation(
