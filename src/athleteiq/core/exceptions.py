@@ -1,7 +1,7 @@
 """Domain exceptions for AthleteIQ Pro.
 
 Defines a clean, strongly typed exception hierarchy for sports science
-telemetry validation, workload mathematical bounds, and model predictions.
+telemetry validation, workload mathematical bounds, feature extraction, and model predictions.
 """
 
 from typing import Any, Optional
@@ -39,5 +39,17 @@ class InsufficientDataError(AthleteIQError):
 
 class BaselineValidationError(AthleteIQError):
     """Raised when athlete baseline metrics are statistically improbable or corrupt."""
+
+    pass
+
+
+class FeatureExtractionError(AthleteIQError):
+    """Raised when errors occur during feature engineering or transformation pipelines."""
+
+    pass
+
+
+class ModelPredictionError(AthleteIQError):
+    """Raised when injury risk prediction models encounter invalid feature vectors or prediction failures."""
 
     pass
