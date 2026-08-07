@@ -1,0 +1,15 @@
+[
+  "tests/test_models.py::test_daily_telemetry_session_load_calculation",
+  "tests/test_models.py::test_injury_risk_assessment_tier_enum",
+  "tests/test_models.py::test_workload_metrics_instantiation",
+  "tests/test_validation.py::test_validate_invalid_rhr_raises_error",
+  "tests/test_validation.py::test_validate_invalid_rpe_raises_error",
+  "tests/test_validation.py::test_validate_valid_telemetry",
+  "tests/test_workload.py::test_calculate_acute_workload",
+  "tests/test_workload.py::test_calculate_acwr_ewma",
+  "tests/test_workload.py::test_calculate_acwr_uncoupled",
+  "tests/test_workload.py::test_calculate_chronic_workload",
+  "tests/test_workload.py::test_calculate_monotony_and_strain",
+  "tests/test_workload.py::test_compute_workload_summary_insufficient_data_raises_error",
+  "tests/test_workload.py::test_compute_workload_summary_success"
+]
