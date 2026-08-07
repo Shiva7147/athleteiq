@@ -1,100 +1,116 @@
-# AthleteIQ Pro 🏃‍♂️⚡
+# 🏃‍♂️ AthleteIQ Pro — AI Sports Science Decision Support Platform
 
-**AthleteIQ Pro** is a production-quality, enterprise-grade AI Decision Support Platform built for sports science, biometric telemetry analysis, feature engineering, and predictive injury risk mitigation.
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)](https://fastapi.tiangolo.com/)
+[![Pydantic v2](https://img.shields.io/badge/Pydantic-v2.0-e91e63.svg)](https://docs.pydantic.dev/)
+[![Pytest](https://img.shields.io/badge/pytest-passing-brightgreen.svg)](https://docs.pytest.org/)
 
----
-
-## 🌟 Key Architecture & Features
-
-- **Domain-Driven Core Architecture (`athleteiq.core`)**: Immutable Value Objects and Data Transfer Objects (`DailyTelemetry`, `AthleteBaseline`, `WorkloadMetrics`, `FeatureVector`, `InjuryRiskAssessment`, `RiskTier`).
-- **Defensive Telemetry Validation (`athleteiq.data.validation`)**: Physiological telemetry data contracts enforcing valid RPE, RHR, HRV, sleep, and GPS distance ranges.
-- **Sports Science Workload Engine (`athleteiq.analytics.workload`)**:
-  - sRPE Session Load ($RPE \times Duration$).
-  - Uncoupled ACWR (7-day Acute / 28-day Chronic ratio).
-  - Exponentially Weighted Moving Average (EWMA) ACWR using time-decay parameter $\lambda = \frac{2}{N+1}$.
-  - Foster's Monotony and Strain Index.
-- **High-Performance Feature Engineering Pipeline (`athleteiq.features`)**:
-  - Biomechanical Z-score normalization ($Z_{HRV}$, $Z_{RHR}$).
-  - Sleep Deficit Ratio and High-Speed Running Intensity Ratio.
-  - EWMA ACWR Spike Delta ($EWMA\_ACWR - Uncoupled\_ACWR$).
-- **Calibrated Injury Risk Predictor & XAI Engine (`athleteiq.models`)**:
-  - Bounded probabilistic soft-tissue injury risk model ($[0.0, 1.0]$).
-  - Explainable AI (XAI) factor attribution pinpointing exact stress drivers.
-  - Actionable clinical recommendations for high-performance coaches and trainers.
-- **Athlete Data Repository Layer (`athleteiq.data.repository`)**: Thread-safe in-memory repository for daily telemetry history streams and automatic baseline computation.
-- **100% Pytest Coverage**: 21 unit tests passing in 0.11s.
+**AthleteIQ Pro** is an enterprise-grade AI Decision Support Platform built for sports science teams, medical staff, and high-performance coaches. It combines **pure deterministic mathematical algorithms** (sRPE, EWMA ACWR, Foster's Monotony & Strain) with **dense vector RAG search** over peer-reviewed sports medicine literature to generate actionable, evidence-backed recommendations without AI math hallucinations.
 
 ---
 
-## 🚀 Quickstart
+## 🏛️ System Architecture
 
-### Prerequisites
-- Python 3.10+
+```
+                                  SYSTEM ARCHITECTURE
 
-### Installation & Test Execution
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                Streamlit SaaS UI (src/ui)                                   │
+│            • Squad Morning Availability Matrix    • What-If Training Load Simulator          │
+│            • Athlete Workload Analytics           • Wearable CSV Data Ingester               │
+└──────────────────────────────────────────────┬──────────────────────────────────────────────┘
+                                               │ HTTP REST
+                                               ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                  FastAPI Backend (src/api)                                  │
+│             /api/v1/athletes • /api/v1/telemetry • /api/v1/analytics                       │
+│             /api/v1/risk     • /api/v1/decisions/query                                      │
+└──────────────┬───────────────────────────────┬───────────────────────────────┬──────────────┘
+               │                               │                               │
+               ▼                               ▼                               ▼
+┌──────────────────────────────┐┌──────────────────────────────┐┌──────────────────────────────┐
+│  Deterministic Analytics     ││   Calibrated Risk Engine     ││   Dense Vector RAG Engine    │
+│    (src/analytics/acwr)      ││   (src/services/risk_service)││     (src/ai/vector_store)    │
+│  • sRPE • Acute/Chronic Load ││  • Physiological Z-Scores    ││  • SentenceTransformers      │
+│  • Uncoupled & EWMA ACWR     ││  • Non-Linear Risk Thresholds││  • Dense 384d Cosine Search  │
+│  • Monotony & Strain Index   ││  • Factor Attributions       ││  • Peer-Reviewed Citations   │
+└──────────────┬───────────────┘└──────────────┬───────────────┘└──────────────┬───────────────┘
+               │                               │                               │
+               └───────────────────────────────┼───────────────────────────────┘
+                                               ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                          SQLAlchemy ORM & Data Repository Layer                             │
+│                  Composite Index idx_telemetry_athlete_date on (athlete_id, recorded_date)  │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚡ Key Features
+
+- 🚨 **Squad Morning Availability Matrix**: Team-wide Red/Amber/Green readiness table showing injury risk probability across the squad.
+- 🔮 **Interactive "What-If" Training Load Simulator**: Models proposed session duration and RPE to project match-day EWMA ACWR spikes before prescribing field sessions.
+- 🧮 **Pure Deterministic Analytics Engine**: $O(N)$ high-throughput formulas for sRPE, 7-day Acute Load, 28-day Chronic Load, Uncoupled ACWR, EWMA ACWR ($\lambda = 2/(N+1)$), Foster's Monotony, and Foster's Strain.
+- 🤖 **Evidence-Backed Vector RAG**: Dense vector embeddings (`sentence-transformers/all-MiniLM-L6-v2`) querying peer-reviewed sports medicine literature (Gabbett 2016, Hulin 2014, Foster 1998, Blanch & Gabbett 2016, Impellizzeri 2019, Meeusen 2013).
+- 📁 **Wearable CSV Drag-and-Drop Ingester**: Parsers for Catapult GPS, WHOOP, and Garmin export logs.
+- 🛠️ **FastAPI Production REST API**: 8 enterprise endpoints with OpenAPI Swagger documentation and global error handlers.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Core**: Python 3.12+
+- **API Framework**: FastAPI, Uvicorn
+- **Data Validation & DTOs**: Pydantic v2
+- **Database & Persistence**: SQLite / PostgreSQL, SQLAlchemy 2.0 ORM
+- **AI Vector Search & Embeddings**: SentenceTransformers, ChromaDB
+- **Frontend SaaS UI**: Streamlit, Plotly Express
+- **Test Automation**: Pytest
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Installation
+
+Clone the repository and install dependencies:
 
 ```bash
-# Clone the repository
 git clone https://github.com/Shiva7147/athleteiq.git
 cd athleteiq
+pip install -r pyproject.toml
+```
 
-# Run the complete test suite
-python -m pytest tests/ -v
+### 2. Run Streamlit SaaS Dashboard
+
+Launch the interactive web platform:
+
+```bash
+streamlit run src/ui/app.py
+```
+Open **`http://localhost:8501`** in your browser. Click **"🛠️ Demo Data Seeder"** to seed a 30-day squad telemetry dataset!
+
+### 3. Run FastAPI Production REST API
+
+Launch the backend API service:
+
+```bash
+uvicorn src.api.main:app --port 8000 --reload
+```
+Interactive OpenAPI Swagger UI: **`http://localhost:8000/docs`**
+
+---
+
+## 🧪 Running Unit & Integration Tests
+
+Run the complete Pytest test suite:
+
+```bash
+pytest tests/unit/ tests/integration/ -v
 ```
 
 ---
 
-## 🧪 Test Suite Execution
+## 📄 License
 
-```powershell
-pytest tests/ -v
-```
-
-```text
-============================= test session starts =============================
-platform win32 -- Python 3.13.9, pytest-8.4.2, pluggy-1.5.0
-configfile: pyproject.toml
-collected 21 items
-
-tests\test_features.py ..                                                [  9%]
-tests\test_models.py ...                                                 [ 23%]
-tests\test_repository.py ....                                            [ 42%]
-tests\test_risk_model.py ..                                              [ 52%]
-tests\test_validation.py ...                                             [ 66%]
-tests\test_workload.py .......                                           [100%]
-
-============================= 21 passed in 0.11s ==============================
-```
-
----
-
-## 📁 Repository Structure
-
-```
-athleteiq/
-├── src/
-│   └── athleteiq/
-│       ├── core/
-│       │   ├── exceptions.py       # Domain exception hierarchy
-│       │   └── models.py           # Telemetry, Baseline, Workload, FeatureVector & Risk DTOs
-│       ├── data/
-│       │   ├── validation.py       # Telemetry data validator
-│       │   └── repository.py       # Repository interface & thread-safe InMemory implementation
-│       ├── features/
-│       │   ├── base.py             # Abstract BaseFeatureExtractor interface
-│       │   └── biomechanical.py    # Z-score & workload feature extractor
-│       ├── models/
-│       │   ├── base.py             # Abstract BaseRiskPredictor strategy interface
-│       │   └── injury_risk.py      # Calibrated soft-tissue injury risk predictor & XAI
-│       └── analytics/
-│           └── workload.py         # sRPE, ACWR, EWMA, Monotony, & Strain algorithms
-├── tests/
-│   ├── test_features.py
-│   ├── test_models.py
-│   ├── test_repository.py
-│   ├── test_risk_model.py
-│   ├── test_validation.py
-│   └── test_workload.py
-├── pyproject.toml
-└── README.md
-```
+MIT License. Developed for high-performance sports science teams.
