@@ -87,12 +87,19 @@ class RAGDecisionEngine:
                 f"Athlete is well-conditioned with low injury risk. Maintain current periodization schedule."
             )
 
+        confidence = 0.85
+        if len(citations) >= 3:
+            confidence += 0.08
+
         return StructuredDecisionResponse(
             athlete_id=athlete_id,
             query_text=query_text,
             deterministic_acwr=workload.acwr_ewma,
             deterministic_risk_tier=risk.risk_tier,
+            confidence_score=round(confidence, 2),
             summary_recommendation=summary,
             action_points=action_points,
+            contributing_math_factors=risk.contributing_factors,
+            alternative_options=[],
             citations=citations,
         )
