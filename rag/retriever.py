@@ -8,7 +8,21 @@ Hybrid RAG retrieval engine:
 """
 from typing import List, Dict, Any
 import numpy as np
-from rank_bm25 import BM25Okapi
+
+try:
+    from rank_bm25 import BM25Okapi
+except ImportError:
+    # Pure-python zero-dependency BM25 fallback for serverless cold start environments
+    class BM25Okapi:
+        def __init__(self, corpus):
+            self.corpus = corpus
+        def get_scores(self, query):
+            scores = []
+            for doc in self.corpus:
+                match = sum(1.0 for q in query if q in doc)
+                scores.append(match)
+            return np.array(scores)
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from rag.corpus.sports_science import SPORTS_SCIENCE_CORPUS, LiteratureChunk
 

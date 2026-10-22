@@ -12,7 +12,7 @@ from typing import List, Dict, Any, Optional
 import os
 from fastapi import FastAPI, HTTPException, status, Depends, Request, Security
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import FileResponse, Response, HTMLResponse
 from pydantic import BaseModel, Field
 from langchain_core.messages import HumanMessage
 
@@ -85,8 +85,16 @@ class AgentChatRequest(BaseModel):
 @app.get("/dashboard", include_in_schema=False)
 def serve_dashboard():
     """Serves the interactive AthleteIQ 2.0 visual command console."""
-    index_path = os.path.join(_TEMPLATES_DIR, "index.html")
-    return FileResponse(index_path)
+    candidates = [
+        os.path.join(os.path.dirname(__file__), "..", "public", "index.html"),
+        os.path.join(os.path.dirname(__file__), "index.html"),
+        os.path.join(_TEMPLATES_DIR, "index.html"),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            with open(p, "r", encoding="utf-8") as f:
+                return HTMLResponse(content=f.read())
+    return HTMLResponse(content="<h1>AthleteIQ 2.0 Dashboard</h1><p>Please check template paths.</p>")
 
 
 @app.get("/v2/health", status_code=status.HTTP_200_OK)

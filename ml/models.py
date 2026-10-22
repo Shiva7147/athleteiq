@@ -22,7 +22,11 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.model_selection import GroupKFold
-import lightgbm as lgb
+
+try:
+    import lightgbm as lgb
+except (ImportError, OSError):
+    lgb = None
 
 
 FEATURE_COLUMNS = [
@@ -92,16 +96,26 @@ class MonotonicLightGBM:
         # (acute load +, strain +, fatigue +, sleep -), leaving chronic load unconstrained for U-curves
         monotone = [1, 0, 1, 1, 1, 0, 0, 0, -1, 1] if use_monotonic_constraints else None
 
-        self.base_estimator = lgb.LGBMClassifier(
-            n_estimators=60,
-            learning_rate=0.04,
-            max_depth=3,
-            num_leaves=8,
-            monotone_constraints=monotone,
-            class_weight="balanced",
-            random_state=42,
-            verbose=-1,
-        )
+        if lgb is not None:
+            self.base_estimator = lgb.LGBMClassifier(
+                n_estimators=60,
+                learning_rate=0.04,
+                max_depth=3,
+                num_leaves=8,
+                monotone_constraints=monotone,
+                class_weight="balanced",
+                random_state=42,
+                verbose=-1,
+            )
+        else:
+            from sklearn.ensemble import HistGradientBoostingClassifier
+            self.base_estimator = HistGradientBoostingClassifier(
+                max_iter=60,
+                learning_rate=0.04,
+                max_depth=3,
+                class_weight="balanced",
+                random_state=42,
+            )
         self.calibrated_model: Any = None
 
     def fit(self, X: np.ndarray, y: np.ndarray, athlete_ids: Optional[np.ndarray] = None):
@@ -202,14 +216,24 @@ class DiscreteTimeSurvivalModel:
         self.hazard_models = []
         for d in range(7):
             y_day = y_survival_matrix[:, d]
-            estimator = lgb.LGBMClassifier(
-                n_estimators=40,
-                learning_rate=0.03,
-                max_depth=3,
-                class_weight="balanced",
-                random_state=42 + d,
-                verbose=-1
-            )
+            if lgb is not None:
+                estimator = lgb.LGBMClassifier(
+                    n_estimators=40,
+                    learning_rate=0.03,
+                    max_depth=3,
+                    class_weight="balanced",
+                    random_state=42 + d,
+                    verbose=-1
+                )
+            else:
+                from sklearn.ensemble import HistGradientBoostingClassifier
+                estimator = HistGradientBoostingClassifier(
+                    max_iter=40,
+                    learning_rate=0.03,
+                    max_depth=3,
+                    class_weight="balanced",
+                    random_state=42 + d,
+                )
             positive_cases = int(np.sum(y_day == 1))
             if positive_cases >= 6:
                 try:
