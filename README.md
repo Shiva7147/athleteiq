@@ -195,6 +195,17 @@ uvicorn api.routes:app --reload --port 8000
 * **Swagger API Documentation:** `http://localhost:8000/docs`
 * **Real-Data Benchmark Endpoint:** `http://localhost:8000/v2/evaluation/benchmark`
 
+### Production Deployment on Vercel
+AthleteIQ 2.0 includes native serverless deployment configuration for Vercel:
+* **Entry Point:** [`api/index.py`](file:///d:/athleteiq/api/index.py) exports the ASGI `app` instance with root path auto-resolution.
+* **Routing Configuration:** [`vercel.json`](file:///d:/athleteiq/vercel.json) rewrites all inbound routes (`/(.*)`) to `@vercel/python`.
+* **Dependency Manifest:** [`requirements.txt`](file:///d:/athleteiq/requirements.txt) specifies all serverless runtime dependencies.
+
+To deploy:
+1. Connect your repository (`sshivashankar1304-ops/AthleteIQ-2.0`) to [Vercel](https://vercel.com).
+2. Leave build settings as default; Vercel automatically detects the Python runtime and `vercel.json`.
+3. Click **Deploy** — your interactive dashboard, REST endpoints, and ML models will be live immediately.
+
 ---
 
 ## 10. Academic Grounding & Literature
