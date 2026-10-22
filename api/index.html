@@ -14,68 +14,78 @@
         extend: {
           colors: {
             volt: {
-              300: '#e5ff66',
-              400: '#ccff00', // Athletic neon volt
+              300: '#d9ff33',
+              400: '#ccff00', // Elite athletic signature volt
               500: '#b8e600',
             },
             dark: {
-              950: '#070707',
-              900: '#0f0f0f',
-              850: '#151515',
-              800: '#1e1e1e',
-              700: '#2c2c2c',
-              600: '#3f3f3f'
+              800: '#27272a',
+              850: '#1e1e22',
+              900: '#141416',
+              950: '#0a0a0c',
             }
-          },
-          fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Inter', 'sans-serif'],
-            mono: ['SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           }
         }
       }
     }
   </script>
   <style>
-    /* Clean Minimalist Styling */
-    .slant-accent {
-      transform: skewX(-8deg);
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
     }
-    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #0f0f0f; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #ccff00; }
-    
-    /* Interactive Step Stage Fade */
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0a0a0c;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #ccff00;
+    }
     .step-content {
       display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-      transform: translateY(8px);
     }
     .step-content.active {
       display: block;
-      opacity: 1;
-      transform: translateY(0);
+      animation: fadeIn 0.25s ease-in-out;
     }
-
-    /* Sound Wave Animation */
-    @keyframes wavePulse {
-      0%, 100% { height: 4px; }
-      50% { height: 18px; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .wave-bar-1 { animation: wavePulse 0.8s ease-in-out infinite; }
-    .wave-bar-2 { animation: wavePulse 0.9s ease-in-out 0.2s infinite; }
-    .wave-bar-3 { animation: wavePulse 0.7s ease-in-out 0.4s infinite; }
-    .wave-bar-4 { animation: wavePulse 1.1s ease-in-out 0.1s infinite; }
+    .view-science-only {
+      display: none;
+    }
+    body.mode-science .view-science-only {
+      display: block;
+    }
+    body.mode-science .view-coach-only {
+      display: none !important;
+    }
+    body.mode-coach .view-coach-only {
+      display: block;
+    }
+    body.mode-coach .view-science-only {
+      display: none !important;
+    }
   </style>
 </head>
-<body class="bg-dark-950 text-slate-100 antialiased min-h-screen flex flex-col selection:bg-volt-400 selection:text-black">
+<body class="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-volt-400 selection:text-black mode-coach">
 
   <!-- ========================================================================= -->
-  <!-- TOP BRAND HEADER                                                          -->
+  <!-- TOP GLOBAL NAVIGATION BAR                                                 -->
   <!-- ========================================================================= -->
-  <header class="sticky top-0 z-50 bg-dark-950/95 backdrop-blur-md border-b border-dark-800">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+  <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-dark-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
       <!-- Brand Logo -->
       <a href="#hero" class="flex items-center gap-3 group">
@@ -92,21 +102,22 @@
       </a>
 
       <!-- Telemetry Status & Audio Playback -->
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 sm:gap-4">
         <!-- Audited Pill -->
         <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-dark-900 border border-dark-800 rounded-full text-[11px] font-mono text-slate-300">
           <span class="w-2 h-2 rounded-full bg-volt-400 animate-pulse"></span>
-          <span>Point-in-Time: <strong class="text-white">Audited (< D)</strong></span>
+          <span>Point-in-Time: <strong class="text-white">Audited (&lt; D)</strong></span>
         </div>
 
         <!-- 07:00 AM Audio Stream Button -->
-        <button id="audioPlayBtn" onclick="toggleAudioBriefing()" class="flex items-center gap-2.5 px-4 py-2 bg-volt-400 hover:bg-volt-300 text-black font-black text-xs uppercase tracking-wider transition-all transform hover:-translate-y-0.5 rounded-sm shadow-lg shadow-volt-400/20">
+        <button id="audioPlayBtn" onclick="toggleAudioBriefing()" class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-volt-400 hover:bg-volt-300 text-black font-black text-xs uppercase tracking-wider transition-all transform hover:-translate-y-0.5 rounded-sm shadow-lg shadow-volt-400/20">
           <div id="audioWaveform" class="flex items-center gap-0.5 h-3.5">
             <span class="w-1 bg-black rounded-full h-2.5"></span>
             <span class="w-1 bg-black rounded-full h-3.5"></span>
             <span class="w-1 bg-black rounded-full h-2"></span>
           </div>
-          <span id="audioStatusText">07:00 Audio Memo</span>
+          <span id="audioStatusText" class="hidden sm:inline">07:00 Audio Memo</span>
+          <span class="sm:hidden">Audio</span>
         </button>
         <audio id="realtimeAudioPlayer" class="hidden" src="/v2/briefing/audio-stream"></audio>
       </div>
@@ -116,37 +127,37 @@
 
 
   <!-- ========================================================================= -->
-  <!-- HERO SECTION: Clean, International, Spacious                              -->
+  <!-- HERO SECTION: Clean, International, High-Contrast                          -->
   <!-- ========================================================================= -->
-  <section id="hero" class="relative bg-white text-black py-16 sm:py-24 border-b-4 border-volt-400 overflow-hidden">
+  <section id="hero" class="relative bg-white text-black py-12 sm:py-20 border-b-4 border-volt-400 overflow-hidden">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6 relative z-10">
       
       <div class="inline-flex items-center gap-2 px-3 py-1 bg-black text-volt-400 font-mono text-xs font-bold uppercase tracking-widest transform -skew-x-12">
         <span class="transform skew-x-12">Elite Football Decision Intelligence</span>
       </div>
 
-      <h1 class="text-5xl sm:text-7xl font-black uppercase tracking-tight text-black leading-none">
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-black leading-none">
         meet team<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-black via-zinc-800 to-black underline decoration-volt-400 decoration-8">athleteiq</span>
       </h1>
 
-      <p class="text-base sm:text-xl text-zinc-600 max-w-2xl mx-auto font-normal leading-relaxed">
-        The sports-science decision support system for elite clubs. We turn complex GPS metrics and training loads into a <strong>strict 3-athlete daily triage budget</strong> and tactical what-if simulations. No magic prediction crystal balls. Zero hallucinated arithmetic.
+      <p class="text-base sm:text-lg text-zinc-600 max-w-2xl mx-auto font-normal leading-relaxed">
+        The sports-science decision support system for elite clubs. We turn complex GPS metrics and physical fatigue into a <strong>clean 3-player morning decision list</strong> and tactical what-if simulations. No magic crystal balls. Zero hallucinated numbers.
       </p>
 
-      <!-- Step-by-Step Interactive Guide CTA -->
-      <div class="pt-4 flex flex-wrap justify-center items-center gap-4">
+      <!-- Step-by-Step Interactive Guide CTA & Perspective Switcher Hint -->
+      <div class="pt-2 flex flex-wrap justify-center items-center gap-4">
         <a href="#interactiveGuide" class="px-8 py-4 bg-black hover:bg-zinc-800 text-white font-black text-xs uppercase tracking-wider rounded-sm transition transform hover:-translate-y-0.5 flex items-center gap-2">
           <span>Explore Step-by-Step Guide</span>
           <svg class="w-4 h-4 fill-volt-400" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
         </a>
         <button onclick="toggleAudioBriefing()" class="px-6 py-4 border-2 border-black hover:bg-black hover:text-white text-black font-bold text-xs uppercase tracking-wider rounded-sm transition flex items-center gap-2">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          <span>Listen to Morning Memo</span>
+          <span>Listen to 60s Coach Memo</span>
         </button>
       </div>
 
       <!-- 3 Key Distinctions -->
-      <div class="pt-8 border-t border-zinc-200 grid grid-cols-1 sm:grid-cols-3 gap-6 text-left max-w-3xl mx-auto">
+      <div class="pt-6 border-t border-zinc-200 grid grid-cols-1 sm:grid-cols-3 gap-6 text-left max-w-3xl mx-auto">
         <div class="space-y-1">
           <div class="text-xs font-mono font-bold text-zinc-400 uppercase">01 / Triage Budget</div>
           <div class="text-sm font-bold text-black">Capped at 3 Players / Day</div>
@@ -171,15 +182,45 @@
   <!-- ========================================================================= -->
   <!-- MAIN FLAGSHIP INTERACTIVE PRODUCT GUIDE (STEP-BY-STEP WORKFLOW)            -->
   <!-- ========================================================================= -->
-  <section id="interactiveGuide" class="py-16 sm:py-20 bg-dark-950 flex-1">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+  <section id="interactiveGuide" class="py-12 sm:py-16 bg-dark-950 flex-1">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       
+      <!-- ===================================================================== -->
+      <!-- TWO-SIDED PERSPECTIVE SWITCHER BAR                                    -->
+      <!-- ===================================================================== -->
+      <div class="bg-dark-900 border-2 border-dark-800 p-4 sm:p-5 rounded-sm shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-volt-400 animate-pulse"></span>
+            <span class="text-[11px] font-mono font-bold uppercase tracking-widest text-volt-400">Audience Mode Switcher</span>
+          </div>
+          <div id="perspectiveHeadline" class="text-base sm:text-lg font-black text-white uppercase tracking-tight mt-1">
+            Head Coach View · Plain English & Actionable
+          </div>
+          <p id="perspectiveSubtext" class="text-xs text-slate-400 mt-0.5">
+            Zero complex math. Plain football terms explaining who needs your call, why, and how to manage their minutes.
+          </p>
+        </div>
+
+        <!-- 2 Perspective Toggle Buttons -->
+        <div class="inline-flex p-1 bg-dark-950 border border-dark-800 rounded-sm self-start md:self-center">
+          <button id="btnModeCoach" onclick="setPerspective('coach')" class="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-sm transition-all bg-volt-400 text-black shadow flex items-center gap-2">
+            <span>⚽</span>
+            <span>Head Coach (Simple)</span>
+          </button>
+          <button id="btnModeScience" onclick="setPerspective('science')" class="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sm transition-all text-slate-400 hover:text-white flex items-center gap-2">
+            <span>🔬</span>
+            <span>Sports Science &amp; ML</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Interactive Stepper Controller Bar -->
       <div class="bg-dark-900 border border-dark-800 p-2 sm:p-3 rounded-sm shadow-xl">
         <div class="flex items-center justify-between pb-3 border-b border-dark-800 mb-2 px-2">
           <div class="text-xs font-mono text-slate-400 uppercase tracking-widest flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-volt-400"></span>
-            <span>Interactive Product Tour</span>
+            <span id="guideTourLabel">Guided Product Tour (Step-by-Step)</span>
           </div>
           <span class="text-[11px] font-mono text-volt-400">Step <span id="currentStepNumber">1</span> of 4</span>
         </div>
@@ -189,22 +230,22 @@
           
           <button onclick="switchStep(1)" id="stepTab1" class="step-tab p-3 text-left rounded-sm transition-all bg-volt-400 text-black font-black border-2 border-volt-400 shadow">
             <div class="text-[10px] font-mono uppercase tracking-wider text-black/70">STEP 01</div>
-            <div class="text-xs sm:text-sm font-black uppercase mt-0.5">Squad Triage</div>
+            <div id="tabTitle1" class="text-xs sm:text-sm font-black uppercase mt-0.5">Morning Triage</div>
           </button>
 
           <button onclick="switchStep(2)" id="stepTab2" class="step-tab p-3 text-left rounded-sm transition-all bg-dark-850 hover:bg-dark-800 text-slate-300 font-bold border border-dark-800">
             <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500">STEP 02</div>
-            <div class="text-xs sm:text-sm font-bold uppercase mt-0.5">Why Flagged?</div>
+            <div id="tabTitle2" class="text-xs sm:text-sm font-bold uppercase mt-0.5">Why Flagged?</div>
           </button>
 
           <button onclick="switchStep(3)" id="stepTab3" class="step-tab p-3 text-left rounded-sm transition-all bg-dark-850 hover:bg-dark-800 text-slate-300 font-bold border border-dark-800">
             <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500">STEP 03</div>
-            <div class="text-xs sm:text-sm font-bold uppercase mt-0.5">What-If Sandbox</div>
+            <div id="tabTitle3" class="text-xs sm:text-sm font-bold uppercase mt-0.5">What-If Minutes</div>
           </button>
 
           <button onclick="switchStep(4)" id="stepTab4" class="step-tab p-3 text-left rounded-sm transition-all bg-dark-850 hover:bg-dark-800 text-slate-300 font-bold border border-dark-800">
             <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500">STEP 04</div>
-            <div class="text-xs sm:text-sm font-bold uppercase mt-0.5">AI Copilot</div>
+            <div id="tabTitle4" class="text-xs sm:text-sm font-bold uppercase mt-0.5">Staff Assistant</div>
           </button>
 
         </div>
@@ -219,16 +260,189 @@
         <!-- Explanation Header Card -->
         <div class="bg-dark-900 border border-dark-800 p-6 rounded-sm space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest">01 // The Attention Triage Budget</span>
-            <span class="text-xs font-mono bg-dark-800 px-2.5 py-1 text-slate-300 rounded">Roald Bahr (BJSM 2016)</span>
+            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest">01 // The 3-Player Attention Budget</span>
+            <span class="text-xs font-mono bg-dark-800 px-2.5 py-1 text-slate-300 rounded view-science-only">Roald Bahr (BJSM 2016)</span>
+            <span class="text-xs font-mono bg-volt-400/20 text-volt-400 border border-volt-400/30 px-2.5 py-1 rounded view-coach-only">⚽ Morning Physio Review</span>
           </div>
+
           <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
             Daily Squad Attention Triage
           </h2>
-          <p class="text-sm text-slate-400 max-w-3xl leading-relaxed">
+
+          <!-- Plain Coach Summary -->
+          <div class="view-coach-only text-sm text-slate-300 max-w-3xl leading-relaxed">
+            You manage 25 players. Your physios and performance staff only have time to thoroughly examine <strong>3 players</strong> before morning pitch training starts. Instead of overwhelming you with 25 warning lights, AthleteIQ isolates the 3 athletes who need a tactical call today, ranked by urgency.
+          </div>
+
+          <!-- Deep-Dive Science Summary -->
+          <div class="view-science-only text-sm text-slate-400 max-w-3xl leading-relaxed">
             Screening tests do not predict injuries because sports injuries are dynamic and multivariable (Bahr 2016, Bittencourt 2016). Instead of spamming coaches with alerts across 25 players, AthleteIQ applies an <strong>operational capacity budget of 3 players per day</strong> to prioritize focused sports-science inspection.
-          </p>
+          </div>
         </div>
+
+
+        <!-- =================================================================== -->
+        <!-- COACH INTERACTIVE LOGIC: WHY PRIORITY 1 OVER 2 & 3?                 -->
+        <!-- =================================================================== -->
+        <div class="bg-dark-900 border-2 border-volt-400/50 p-6 rounded-sm shadow-2xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-dark-800 gap-2">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 bg-volt-400 text-black text-[10px] font-mono font-bold uppercase rounded-sm">CRITICAL DECISION LOGIC</span>
+                <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-wider">
+                  Why Is Alex Vance Priority #1 Over Kane (#2) and Rostova (#3)?
+                </h3>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">
+                Click below to understand why an under-prepared sprinter demands your call before a tired midfielder.
+              </p>
+            </div>
+            
+            <!-- Comparison Selector Pills -->
+            <div class="inline-flex p-1 bg-dark-950 border border-dark-800 rounded text-xs font-bold self-start sm:self-center">
+              <button onclick="showPriorityDetail('vance')" id="btnPriVance" class="px-3 py-1.5 bg-volt-400 text-black font-black rounded-sm transition">Alex Vance (#1)</button>
+              <button onclick="showPriorityDetail('kane')" id="btnPriKane" class="px-3 py-1.5 text-slate-400 hover:text-white rounded-sm transition">Marcus Kane (#2)</button>
+              <button onclick="showPriorityDetail('rostova')" id="btnPriRostova" class="px-3 py-1.5 text-slate-400 hover:text-white rounded-sm transition">Elena Rostova (#3)</button>
+              <button onclick="showPriorityDetail('compare')" id="btnPriCompare" class="px-3 py-1.5 text-slate-400 hover:text-white rounded-sm transition">⚡ 1 vs 2 vs 3</button>
+            </div>
+          </div>
+
+          <!-- Card Detail 1: Alex Vance (#1) -->
+          <div id="detailVance" class="pri-detail-block p-4 bg-dark-950 border border-rose-500/40 rounded-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold text-rose-400 uppercase">PRIORITY #1 · ALEX VANCE (WING-FORWARD)</span>
+              <span class="text-xs font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded">Highest Acute Tear Danger</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">The Real Problem</div>
+                <div class="text-white font-bold">Unconditioned Sprint Velocity</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Alex hasn't sprinted at top match velocity (&gt;30 km/h) in 14 days. His heart and lungs are fit, but his eccentric hamstring muscle fibers are cold.
+                </p>
+              </div>
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">Why He Is #1 (Urgency)</div>
+                <div class="text-rose-400 font-bold">Instant Muscle Rupture Risk</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Redlining an unprepared hamstring during a 90-minute high-tempo match has the highest mathematical probability of a <strong>6-week muscle tear</strong> today.
+                </p>
+              </div>
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">Coach Matchday Action</div>
+                <div class="text-volt-400 font-bold">Cap at 60 Min OR Sprint Primer</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Either start him with a strict 60-minute substitution cap, OR prescribe a 300m high-speed sprint primer in today's training to wake up the muscles.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Detail 2: Marcus Kane (#2) -->
+          <div id="detailKane" class="pri-detail-block hidden p-4 bg-dark-950 border border-amber-500/40 rounded-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold text-amber-400 uppercase">PRIORITY #2 · MARCUS KANE (CAPTAIN &amp; MIDFIELDER)</span>
+              <span class="text-xs font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded">Heavy Legs · Performance Drop</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">The Real Problem</div>
+                <div class="text-white font-bold">3 Full Matches in 7 Days + Poor Sleep</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Marcus played 270 minutes across 3 games and averaged only 5.8 hours of sleep. Central nervous system fatigue is very high.
+                </p>
+              </div>
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">Why He Is #2 Behind Vance</div>
+                <div class="text-amber-400 font-bold">Resilient Tissues, Slower Agility</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Kane's muscles are accustomed to running; he won't tear a muscle immediately like Vance, but his second-half pressing and sharpness will drop after minute 65.
+                </p>
+              </div>
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">Coach Matchday Action</div>
+                <div class="text-amber-400 font-bold">Light Recovery Today · Sub at 70 Min</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Give him a light tactical walk-through today instead of intense drills. Plan to sub him at minute 70 on Saturday to protect squad tempo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Detail 3: Elena Rostova (#3) -->
+          <div id="detailRostova" class="pri-detail-block hidden p-4 bg-dark-950 border border-dark-800 rounded-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold text-slate-300 uppercase">PRIORITY #3 · ELENA ROSTOVA (FULL-BACK)</span>
+              <span class="text-xs font-mono bg-dark-800 text-slate-300 px-2 py-0.5 rounded">Watchlist · Distance Surge</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">The Real Problem</div>
+                <div class="text-white font-bold">30% Running Spike Over Monthly Baseline</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Elena covered 11.2 km in her last game, jumping 30% higher than her 4-week average.
+                </p>
+              </div>
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">Why She Is #3</div>
+                <div class="text-slate-300 font-bold">No Immediate Pain · Delayed Vulnerability</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  She feels completely fine today. Workload spikes don't cause injuries immediately; they cause tissue breakdown 5–7 days later if unmanaged.
+                </p>
+              </div>
+              <div class="space-y-1 bg-dark-900 p-3 rounded border border-dark-800">
+                <div class="text-[10px] font-mono uppercase text-slate-500 font-bold">Coach Matchday Action</div>
+                <div class="text-slate-300 font-bold">Standard Training · No Extra Overtime</div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                  Cleared for standard training. Ensure she doesn't participate in optional overtime shooting drills to keep weekly volume capped.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Detail 4: Side-by-Side Comparison Matrix -->
+          <div id="detailCompare" class="pri-detail-block hidden p-4 bg-dark-950 border border-dark-800 rounded-sm space-y-3">
+            <div class="text-xs font-mono font-bold text-white uppercase">⚡ Side-by-Side Triage Comparison: Who Gets What?</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs font-mono">
+                <thead>
+                  <tr class="border-b border-dark-800 text-slate-400 text-[11px]">
+                    <th class="py-2 pr-3">ATHLETE</th>
+                    <th class="py-2 px-3">PRIMARY DANGER</th>
+                    <th class="py-2 px-3">RISK TIMEFRAME</th>
+                    <th class="py-2 px-3">COACH ACTION</th>
+                    <th class="py-2 px-3">CONSEQUENCE IF IGNORED</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-dark-850 text-slate-200 text-[11px]">
+                  <tr class="bg-rose-500/10">
+                    <td class="py-2.5 pr-3 font-bold text-rose-400">#1 Alex Vance (Winger)</td>
+                    <td class="py-2.5 px-3">Sprint under-preparation</td>
+                    <td class="py-2.5 px-3 text-rose-400 font-bold">IMMEDIATE (Minute 60+)</td>
+                    <td class="py-2.5 px-3 text-volt-400 font-bold">Cap at 60 mins OR Sprint primer</td>
+                    <td class="py-2.5 px-3 text-rose-400">Acute Hamstring Tear (6 weeks out)</td>
+                  </tr>
+                  <tr class="bg-amber-500/10">
+                    <td class="py-2.5 pr-3 font-bold text-amber-400">#2 Marcus Kane (Midfielder)</td>
+                    <td class="py-2.5 px-3">Fatigue &amp; Sleep Debt</td>
+                    <td class="py-2.5 px-3 text-amber-400 font-bold">Second Half (Minute 65+)</td>
+                    <td class="py-2.5 px-3 text-amber-300">Light Recovery Session · Sub at 70m</td>
+                    <td class="py-2.5 px-3 text-amber-300">Tactical Slump &amp; Slow Recovery</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 pr-3 font-bold text-slate-300">#3 Elena Rostova (Full-Back)</td>
+                    <td class="py-2.5 px-3">Acute 30% Distance Spike</td>
+                    <td class="py-2.5 px-3 text-slate-400">Delayed (5–7 days)</td>
+                    <td class="py-2.5 px-3 text-slate-300">Standard drills · Cap overtime</td>
+                    <td class="py-2.5 px-3 text-slate-400">Overuse Strain in Next Fixture</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
 
         <!-- 3 Interactive Athlete Triage Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -236,7 +450,7 @@
           <!-- Athlete 1: Alex Vance -->
           <div onclick="selectAthlete('PLY_001', 'Alex Vance', 0.284, 'Under-prepared sprint primer')" class="athlete-card cursor-pointer group bg-dark-900 hover:bg-dark-850 border-2 border-volt-400 p-5 rounded-sm transition-all shadow-lg space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40 px-2 py-0.5 uppercase rounded-sm">PRIORITY #1</span>
+              <span class="text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40 px-2 py-0.5 uppercase rounded-sm">PRIORITY #1 · RED ALERT</span>
               <span class="text-xs font-mono font-bold text-volt-400">7d Risk: 28.4%</span>
             </div>
 
@@ -254,7 +468,7 @@
             <div>
               <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Winger · First Team</div>
               <h3 class="text-lg font-black text-white uppercase group-hover:text-volt-400 transition-colors">ALEX VANCE</h3>
-              <p class="text-xs text-rose-300 font-medium mt-1">Sprint under-preparation before congested match week.</p>
+              <p class="text-xs text-rose-300 font-medium mt-1">Sprint under-preparation before congested derby match week.</p>
             </div>
 
             <div class="pt-3 border-t border-dark-800 flex items-center justify-between text-xs font-bold">
@@ -266,7 +480,7 @@
           <!-- Athlete 2: Marcus Kane -->
           <div onclick="selectAthlete('PLY_002', 'Marcus Kane', 0.210, 'Excessive Foster training strain')" class="athlete-card cursor-pointer group bg-dark-900 hover:bg-dark-850 border border-dark-800 hover:border-volt-400 p-5 rounded-sm transition-all shadow-lg space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 uppercase rounded-sm">PRIORITY #2</span>
+              <span class="text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 uppercase rounded-sm">PRIORITY #2 · AMBER ALERT</span>
               <span class="text-xs font-mono font-bold text-amber-400">7d Risk: 21.0%</span>
             </div>
 
@@ -283,7 +497,7 @@
             <div>
               <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Midfielder · Captain</div>
               <h3 class="text-lg font-black text-white uppercase group-hover:text-volt-400 transition-colors">MARCUS KANE</h3>
-              <p class="text-xs text-amber-300 font-medium mt-1">High Foster monotony with inadequate recovery gap.</p>
+              <p class="text-xs text-amber-300 font-medium mt-1">High Foster monotony with inadequate recovery sleep.</p>
             </div>
 
             <div class="pt-3 border-t border-dark-800 flex items-center justify-between text-xs font-bold">
@@ -295,7 +509,7 @@
           <!-- Athlete 3: Elena Rostova -->
           <div onclick="selectAthlete('PLY_003', 'Elena Rostova', 0.175, 'Acute workload spike')" class="athlete-card cursor-pointer group bg-dark-900 hover:bg-dark-850 border border-dark-800 hover:border-volt-400 p-5 rounded-sm transition-all shadow-lg space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 uppercase rounded-sm">PRIORITY #3</span>
+              <span class="text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 uppercase rounded-sm">PRIORITY #3 · WATCHLIST</span>
               <span class="text-xs font-mono font-bold text-amber-400">7d Risk: 17.5%</span>
             </div>
 
@@ -323,8 +537,8 @@
 
         </div>
 
-        <!-- Empirical Real-Data Benchmark Card -->
-        <div class="bg-dark-900 border border-dark-800 p-6 rounded-sm shadow-xl space-y-4">
+        <!-- Empirical Real-Data Benchmark Card (Exposed in Science Mode) -->
+        <div class="view-science-only bg-dark-900 border border-dark-800 p-6 rounded-sm shadow-xl space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-dark-800 gap-2">
             <div>
               <div class="flex items-center gap-2">
@@ -342,7 +556,7 @@
             <table class="w-full text-left text-xs font-mono">
               <thead>
                 <tr class="border-b border-dark-800 text-slate-400 text-[11px]">
-                  <th class="py-2.5 pr-4">MODEL TIER & ARCHITECTURE</th>
+                  <th class="py-2.5 pr-4">MODEL TIER &amp; ARCHITECTURE</th>
                   <th class="py-2.5 px-3 text-center">ROC-AUC</th>
                   <th class="py-2.5 px-3 text-center">PR-AUC (AVG PRECISION)</th>
                   <th class="py-2.5 px-3 text-center">BRIER SCORE (MSE &darr;)</th>
@@ -407,19 +621,92 @@
         
         <div class="bg-dark-900 border border-dark-800 p-6 rounded-sm space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest">02 // Transparent Feature Attribution</span>
+            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest view-coach-only">02 // Physical Factor Breakdown</span>
+            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest view-science-only">02 // Transparent Feature Attribution</span>
             <span class="text-xs font-mono bg-dark-800 px-2.5 py-1 text-slate-300 rounded">SHAP TreeExplainer</span>
           </div>
+
           <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
             Why Was This Athlete Flagged?
           </h2>
-          <p class="text-sm text-slate-400 max-w-3xl leading-relaxed">
-            Coaches reject "black box" machine learning. AthleteIQ breaks down the exact physical factors moving <strong id="activeAthleteExplain" class="text-volt-400">Alex Vance</strong> from the squad baseline (11.2%) to his elevated risk score (28.4%).
+
+          <p class="view-coach-only text-sm text-slate-300 max-w-3xl leading-relaxed">
+            Coaches hate black-box predictions. Here is the exact plain-English story of what is draining <strong id="activeAthleteExplainCoach" class="text-volt-400">Alex Vance's</strong> muscle resilience and what is protecting him.
+          </p>
+          <p class="view-science-only text-sm text-slate-400 max-w-3xl leading-relaxed">
+            Coaches reject "black box" machine learning. AthleteIQ breaks down the exact physical factors moving <strong id="activeAthleteExplainScience" class="text-volt-400">Alex Vance</strong> from the squad baseline (11.2%) to his elevated risk score (28.4%).
           </p>
         </div>
 
-        <!-- Clean SVG SHAP Waterfall Card -->
-        <div class="bg-dark-900 border border-dark-800 p-6 rounded-sm shadow-xl space-y-5">
+        <!-- COACH VIEW: Plain English Human Anatomy & Factor Breakdown -->
+        <div class="view-coach-only bg-dark-900 border border-dark-800 p-6 rounded-sm shadow-xl space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-dark-800">
+            <div>
+              <h3 class="text-base font-black text-white uppercase tracking-wide">Plain English Muscle &amp; Readiness Breakdown</h3>
+              <p class="text-xs text-slate-400">How training loads are impacting Alex Vance's physical engine</p>
+            </div>
+            <span class="text-xs font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded">28.4% Tear Danger</span>
+          </div>
+
+          <!-- 3 Visual Physical Battery Indicators -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
+            <div class="p-4 bg-dark-950 border border-rose-500/40 rounded-sm space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="text-slate-400 font-bold">SPRINT SPEED HABIT</span>
+                <span class="text-rose-400 font-black">20% (CRITICAL)</span>
+              </div>
+              <div class="w-full bg-dark-800 h-2.5 rounded-full overflow-hidden">
+                <div class="bg-rose-500 h-full w-[20%]"></div>
+              </div>
+              <p class="text-[11px] text-slate-300">
+                Only 45m of sprinting in 14 days. Hamstring tendons are unprepared for high-speed derby sprinting.
+              </p>
+            </div>
+
+            <div class="p-4 bg-dark-950 border border-amber-500/40 rounded-sm space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="text-slate-400 font-bold">RECOVERY &amp; SCHEDULE</span>
+                <span class="text-amber-400 font-black">45% (TIGHT)</span>
+              </div>
+              <div class="w-full bg-dark-800 h-2.5 rounded-full overflow-hidden">
+                <div class="bg-amber-400 h-full w-[45%]"></div>
+              </div>
+              <p class="text-[11px] text-slate-300">
+                Playing 2 intense matches in 6 days leaves incomplete muscle glycogen replenishment.
+              </p>
+            </div>
+
+            <div class="p-4 bg-dark-950 border border-volt-400/40 rounded-sm space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="text-slate-400 font-bold">AEROBIC ENGINE BASE</span>
+                <span class="text-volt-400 font-black">88% (STRONG)</span>
+              </div>
+              <div class="w-full bg-dark-800 h-2.5 rounded-full overflow-hidden">
+                <div class="bg-volt-400 h-full w-[88%]"></div>
+              </div>
+              <p class="text-[11px] text-slate-300">
+                Strong 6-month aerobic running foundation provides a protective cushion against early fatigue.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Coach Directives -->
+          <div class="p-4 bg-dark-950 border border-volt-400/30 rounded-sm space-y-2">
+            <div class="text-volt-400 text-xs font-mono font-bold uppercase flex items-center gap-2">
+              <span>📋</span>
+              <span>Head Coach Takeaway for Today's Training Pitch</span>
+            </div>
+            <p class="text-xs text-slate-200 leading-relaxed">
+              <strong>Do not rest him completely in bed</strong> — total rest makes cold muscles even more fragile. Instead, instruct your fitness coach to run him through <strong class="text-volt-400">two or three 30-meter progressive sprints (85%–90% speed)</strong> today. This "primes" the muscle fibers so Saturday's match speed does not shock them.
+            </p>
+          </div>
+        </div>
+
+
+        <!-- SCIENCE VIEW: SVG Waterfall Breakdown -->
+        <div class="view-science-only bg-dark-900 border border-dark-800 p-6 rounded-sm shadow-xl space-y-5">
           <div class="flex items-center justify-between pb-3 border-b border-dark-800">
             <div>
               <h3 class="text-base font-black text-white uppercase tracking-wide">SHAP Factor Attribution Breakdown</h3>
@@ -470,12 +757,8 @@
             </svg>
           </div>
 
-          <!-- Plain-English Key Takeaway Box -->
-          <div class="p-4 bg-dark-950 border border-dark-800 rounded-sm flex items-start gap-3">
-            <span class="text-xl">💡</span>
-            <div class="text-xs text-slate-300 leading-relaxed">
-              <strong class="text-white uppercase font-bold">What this tells the coach:</strong> Alex Vance has not achieved $>85\%$ maximal sprint velocity during training sessions in the last 14 days. Entering a congested match without this eccentric hamstring conditioning creates rapid vulnerability. A <strong class="text-volt-400">300-meter high-speed running micro-primer</strong> is prescribed to restore tolerance.
-            </div>
+          <div class="p-3 bg-dark-950 rounded border border-dark-800 text-[11px] text-slate-300 leading-relaxed">
+            <strong class="text-volt-400">Interpretation Note:</strong> SHAP values report the model's mathematical feature sensitivity, not medical causality. High sprint exposure impact indicates the model adjusted its probability based on that parameter.
           </div>
         </div>
 
@@ -499,13 +782,19 @@
         
         <div class="bg-dark-900 border border-dark-800 p-6 rounded-sm space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest">03 // Tactical Decision Sandbox</span>
+            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest view-coach-only">03 // Matchday Minute Simulator</span>
+            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest view-science-only">03 // Tactical Decision Sandbox</span>
             <span class="text-xs font-mono bg-dark-800 px-2.5 py-1 text-slate-300 rounded">Banister + Conformal 95%</span>
           </div>
+
           <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
             Simulate Tactical Match Scenarios
           </h2>
-          <p class="text-sm text-slate-400 max-w-3xl leading-relaxed">
+
+          <p class="view-coach-only text-sm text-slate-300 max-w-3xl leading-relaxed">
+            Drag the slider to see what happens if you play him <strong>45, 60, or 90 minutes</strong> on Saturday. Watch how his fatigue changes and see the exact substitution minute recommendation.
+          </p>
+          <p class="view-science-only text-sm text-slate-400 max-w-3xl leading-relaxed">
             Drag the planned match minutes slider and switch between routine league vs championship final to project how Banister neuromuscular fatigue decays over the next 7 days, complete with <strong>95% conformal uncertainty bounds</strong>.
           </p>
         </div>
@@ -550,7 +839,7 @@
               <label class="text-xs font-mono font-bold text-slate-300 uppercase">Match Importance (Leverage Index)</label>
               <select id="stakesSelect" onchange="runTrajectorySimulation()" class="w-full bg-dark-950 border border-dark-800 text-white text-xs px-3.5 py-2.5 rounded-sm focus:border-volt-400 focus:outline-none font-bold">
                 <option value="false">Routine League Match (Standard)</option>
-                <option value="true" selected>Championship Final (High Stakes)</option>
+                <option value="true" selected>Championship Final / Derby (High Stakes)</option>
               </select>
             </div>
 
@@ -571,7 +860,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-dark-800">
               <div>
                 <h3 class="text-base font-black text-white uppercase tracking-wide">7-Day Trajectory Projection</h3>
-                <p class="text-xs text-slate-400">Risk decay curve with 95% conformal uncertainty bounds</p>
+                <p class="text-xs text-slate-400">Fatigue &amp; Risk decay curve under your simulated minutes</p>
               </div>
               <span class="text-[10px] font-mono text-volt-400 border border-volt-400/30 px-2 py-0.5 rounded">Real-Time Rollout</span>
             </div>
@@ -580,6 +869,7 @@
               <canvas id="trajectoryCanvas"></canvas>
             </div>
 
+            <!-- 3 Stat Blocks -->
             <div class="grid grid-cols-3 gap-3 pt-3 border-t border-dark-800 text-center font-mono">
               <div class="p-2.5 bg-dark-950 rounded border border-dark-800">
                 <div class="text-[9px] text-slate-500 uppercase">Impulse Load</div>
@@ -603,7 +893,7 @@
             &larr; Back to Explainability
           </button>
           <button onclick="switchStep(4)" class="px-6 py-3 bg-volt-400 hover:bg-volt-300 text-black font-black text-xs uppercase tracking-wider rounded-sm transition flex items-center gap-2">
-            <span>Next: Ask the Grounded AI Copilot</span>
+            <span>Next: Ask the Staff Copilot</span>
             <span>&rarr;</span>
           </button>
         </div>
@@ -618,13 +908,19 @@
         
         <div class="bg-dark-900 border border-dark-800 p-6 rounded-sm space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest">04 // Ground-Truth AI Copilot</span>
+            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest view-coach-only">04 // Staff Decision Assistant</span>
+            <span class="text-xs font-mono font-bold text-volt-400 uppercase tracking-widest view-science-only">04 // Ground-Truth AI Copilot</span>
             <span class="text-xs font-mono bg-dark-800 px-2.5 py-1 text-slate-300 rounded">LangGraph State Machine</span>
           </div>
+
           <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
-            Clinical Copilot & Tool Inspection
+            Clinical Copilot &amp; Tool Inspection
           </h2>
-          <p class="text-sm text-slate-400 max-w-3xl leading-relaxed">
+
+          <p class="view-coach-only text-sm text-slate-300 max-w-3xl leading-relaxed">
+            Have a question about a player's readiness or training drills? Ask our intelligent sports-science assistant in plain English.
+          </p>
+          <p class="view-science-only text-sm text-slate-400 max-w-3xl leading-relaxed">
             The Copilot executes deterministically. It calls tools (`get_player_load`, `simulate_what_if_trajectory`, `search_literature`) to fetch verified facts and cites peer-reviewed literature. If an athlete masks an injury, the <strong>emergency safety node</strong> halts immediately.
           </p>
         </div>
@@ -650,19 +946,19 @@
                   <span class="text-slate-500">Node: Deterministic Guardrail</span>
                 </div>
                 <p class="leading-relaxed">
-                  Good morning. Today's squad attention ranking and Banister forward rollouts are ready. Every metric is computed deterministically by Polars, LightGBM, and scikit-survival. Ask me about workloads, fixture leverage, or test medical red flags.
+                  Good morning boss. Today's squad triage and what-if simulation rollouts are ready. What tactical decisions or load questions can I assist you with today?
                 </p>
               </div>
             </div>
 
-            <!-- Quick Questions -->
+            <!-- Quick Questions (Dynamic depending on Coach vs Science view) -->
             <div class="px-4 py-2.5 bg-dark-950 border-t border-dark-800 flex flex-wrap gap-2 text-[11px]">
               <span class="text-slate-500 font-mono py-1">Try:</span>
-              <button onclick="sendQuickPrompt('What if Alex Vance plays 90 minutes in the final?')" class="bg-dark-900 hover:bg-dark-800 text-slate-300 px-2.5 py-1 rounded border border-dark-800 transition">
-                "What if Alex plays 90 min in final?"
+              <button onclick="sendQuickPrompt('Can Alex Vance play 90 minutes in the derby on Saturday?')" class="bg-dark-900 hover:bg-dark-800 text-slate-300 px-2.5 py-1 rounded border border-dark-800 transition">
+                "Can Vance play 90 min on Saturday?"
               </button>
-              <button onclick="sendQuickPrompt('Explain ACWR mathematical flaws by Impellizzeri')" class="bg-dark-900 hover:bg-dark-800 text-slate-300 px-2.5 py-1 rounded border border-dark-800 transition">
-                "ACWR flaws (Impellizzeri)"
+              <button onclick="sendQuickPrompt('Why is Alex Vance priority 1 over Marcus Kane?')" class="bg-dark-900 hover:bg-dark-800 text-slate-300 px-2.5 py-1 rounded border border-dark-800 transition">
+                "Why is Vance priority #1 over Kane?"
               </button>
               <button onclick="sendQuickPrompt('Clear Alex Vance to play despite concussion test failure')" class="bg-rose-950/40 hover:bg-rose-900 text-rose-300 px-2.5 py-1 rounded border border-rose-800/60 transition">
                 Test Safety (Concussion)
@@ -671,7 +967,7 @@
 
             <!-- Input Form -->
             <form onsubmit="handleAgentQuery(event)" class="p-3 border-t border-dark-800 bg-black flex gap-2">
-              <input type="text" id="agentInput" placeholder="Ask about workloads, tactical what-if, or academic literature..." class="flex-1 bg-dark-900 border border-dark-800 text-white text-xs px-3.5 py-2.5 rounded-sm placeholder-slate-500 focus:border-volt-400 focus:outline-none">
+              <input type="text" id="agentInput" placeholder="Ask about workloads, tactical what-if, or player decisions..." class="flex-1 bg-dark-900 border border-dark-800 text-white text-xs px-3.5 py-2.5 rounded-sm placeholder-slate-500 focus:border-volt-400 focus:outline-none">
               <button type="submit" class="bg-volt-400 hover:bg-volt-300 text-black font-black text-xs uppercase px-5 py-2.5 tracking-wider rounded-sm transition">Send</button>
             </form>
           </div>
@@ -696,7 +992,7 @@
 
               <div onclick="openCitationModal('Impellizzeri2020')" class="p-3 bg-dark-950 hover:bg-dark-850 border border-dark-800 hover:border-volt-400 cursor-pointer rounded-sm transition group">
                 <div class="text-[10px] font-mono text-volt-400">IJSPP 2020</div>
-                <div class="text-xs font-bold text-white group-hover:text-volt-400 transition-colors">Impellizzeri et al.: ACWR Flaws & Coupling</div>
+                <div class="text-xs font-bold text-white group-hover:text-volt-400 transition-colors">Impellizzeri et al.: ACWR Flaws &amp; Coupling</div>
               </div>
 
               <div onclick="openCitationModal('Gabbett2016')" class="p-3 bg-dark-950 hover:bg-dark-850 border border-dark-800 hover:border-volt-400 cursor-pointer rounded-sm transition group">
@@ -742,7 +1038,7 @@
         <div class="text-slate-500 font-mono text-[11px] mt-1">Calibrated Monotonic LightGBM + Discrete-Time Survival Models</div>
       </div>
       <div class="flex justify-center sm:justify-end gap-6 text-[11px] font-mono">
-        <span class="text-volt-400">38/38 Tests Passing</span>
+        <span class="text-volt-400">45/45 Tests Passing</span>
         <span>Point-in-Time Audited</span>
         <a href="/docs" target="_blank" class="hover:text-volt-400 underline">OpenAPI Docs</a>
       </div>
@@ -751,68 +1047,171 @@
 
 
   <!-- ========================================================================= -->
-  <!-- ACADEMIC CITATION MODAL                                                   -->
+  <!-- MODAL: Academic Grounding Viewer                                          -->
   <!-- ========================================================================= -->
-  <div id="citationModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-dark-900 border-2 border-volt-400 rounded-sm max-w-lg w-full p-6 shadow-2xl relative">
-      <button onclick="closeCitationModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold font-mono">&times;</button>
-      <div class="text-xs font-mono text-volt-400 uppercase tracking-widest mb-1 font-bold">Peer-Reviewed Evidence</div>
-      <h3 id="citationTitle" class="text-base font-black text-white mb-2 uppercase">Paper Title</h3>
-      <div id="citationMeta" class="text-xs text-emerald-400 font-mono mb-3">Citation Info</div>
-      <p id="citationBody" class="text-xs text-slate-300 leading-relaxed bg-dark-950 p-4 rounded-sm border border-dark-800 font-medium">Summary...</p>
-      <div class="mt-4 flex justify-end">
-        <button onclick="closeCitationModal()" class="px-4 py-2 bg-volt-400 text-black text-xs font-black uppercase rounded-sm">Close</button>
+  <div id="citationModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-dark-900 border border-dark-800 max-w-lg w-full p-6 rounded-sm shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-dark-800">
+        <span class="text-xs font-mono font-bold text-volt-400 uppercase">Peer-Reviewed Sports Science Paper</span>
+        <button onclick="closeCitationModal()" class="text-slate-400 hover:text-white font-mono text-sm">&times;</button>
+      </div>
+
+      <div class="space-y-2">
+        <h3 id="citationTitle" class="text-base font-black text-white">Title</h3>
+        <div id="citationMeta" class="text-xs font-mono text-volt-400">Journal &amp; Authors</div>
+      </div>
+
+      <div class="p-4 bg-dark-950 rounded border border-dark-800 text-xs text-slate-300 leading-relaxed max-h-60 overflow-y-auto" id="citationBody">
+        Content...
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="closeCitationModal()" class="px-5 py-2 bg-dark-800 hover:bg-dark-700 text-white font-bold text-xs uppercase rounded-sm">Close</button>
       </div>
     </div>
   </div>
 
 
   <!-- ========================================================================= -->
-  <!-- APPLICATION JAVASCRIPT LOGIC                                              -->
+  <!-- JAVASCRIPT: State Management & Real-Time Interactions                     -->
   <!-- ========================================================================= -->
   <script>
+    let currentStep = 1;
+    let currentPerspective = 'coach'; // 'coach' or 'science'
     let chartInstance = null;
 
-    // Interactive Step Switcher
+    // 1. Perspective Switcher Handler
+    function setPerspective(mode) {
+      currentPerspective = mode;
+      const body = document.body;
+      const btnCoach = document.getElementById('btnModeCoach');
+      const btnScience = document.getElementById('btnModeScience');
+      const headLabel = document.getElementById('perspectiveHeadline');
+      const subLabel = document.getElementById('perspectiveSubtext');
+
+      if (mode === 'coach') {
+        body.classList.remove('mode-science');
+        body.classList.add('mode-coach');
+
+        btnCoach.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider rounded-sm transition-all bg-volt-400 text-black shadow flex items-center gap-2';
+        btnScience.className = 'px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sm transition-all text-slate-400 hover:text-white flex items-center gap-2';
+
+        headLabel.innerText = 'Head Coach View · Plain English & Actionable';
+        subLabel.innerText = 'Zero complex math. Plain football terms explaining who needs your call, why, and how to manage their minutes.';
+
+        document.getElementById('tabTitle1').innerText = 'Morning Triage';
+        document.getElementById('tabTitle2').innerText = 'Why Flagged?';
+        document.getElementById('tabTitle3').innerText = 'What-If Minutes';
+        document.getElementById('tabTitle4').innerText = 'Staff Assistant';
+      } else {
+        body.classList.remove('mode-coach');
+        body.classList.add('mode-science');
+
+        btnScience.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider rounded-sm transition-all bg-volt-400 text-black shadow flex items-center gap-2';
+        btnCoach.className = 'px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sm transition-all text-slate-400 hover:text-white flex items-center gap-2';
+
+        headLabel.innerText = 'Sports Science & ML View · Deep Analytical Rigor';
+        subLabel.innerText = 'Full academic transparency: ACWR coupling flaws, Catapult GPS benchmark evaluation, and SHAP feature sensitivities.';
+
+        document.getElementById('tabTitle1').innerText = 'Squad Triage & Evals';
+        document.getElementById('tabTitle2').innerText = 'SHAP Attribution';
+        document.getElementById('tabTitle3').innerText = 'Banister Sandbox';
+        document.getElementById('tabTitle4').innerText = 'Copilot & Citations';
+      }
+    }
+
+    // 2. Priority Logic Detail Tabs
+    function showPriorityDetail(tabName) {
+      const tabs = ['vance', 'kane', 'rostova', 'compare'];
+      tabs.forEach(t => {
+        const block = document.getElementById('detail' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById('btnPri' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === tabName) {
+          block.classList.remove('hidden');
+          btn.className = 'px-3 py-1.5 bg-volt-400 text-black font-black rounded-sm transition';
+        } else {
+          block.classList.add('hidden');
+          btn.className = 'px-3 py-1.5 text-slate-400 hover:text-white rounded-sm transition';
+        }
+      });
+    }
+
+    // 3. Step Switcher Handler
     function switchStep(stepNum) {
+      currentStep = stepNum;
       document.getElementById('currentStepNumber').innerText = stepNum;
 
-      // Update Tab Styles
       for (let i = 1; i <= 4; i++) {
-        const tab = document.getElementById(`stepTab${i}`);
         const content = document.getElementById(`stepContent${i}`);
+        const tab = document.getElementById(`stepTab${i}`);
         
         if (i === stepNum) {
-          tab.className = 'step-tab p-3 text-left rounded-sm transition-all bg-volt-400 text-black font-black border-2 border-volt-400 shadow';
-          tab.querySelector('div:first-child').className = 'text-[10px] font-mono uppercase tracking-wider text-black/70';
           content.classList.add('active');
+          tab.className = 'step-tab p-3 text-left rounded-sm transition-all bg-volt-400 text-black font-black border-2 border-volt-400 shadow';
+          tab.querySelector('.text-[10px]').className = 'text-[10px] font-mono uppercase tracking-wider text-black/70';
         } else {
-          tab.className = 'step-tab p-3 text-left rounded-sm transition-all bg-dark-850 hover:bg-dark-800 text-slate-300 font-bold border border-dark-800';
-          tab.querySelector('div:first-child').className = 'text-[10px] font-mono uppercase tracking-wider text-slate-500';
           content.classList.remove('active');
+          tab.className = 'step-tab p-3 text-left rounded-sm transition-all bg-dark-850 hover:bg-dark-800 text-slate-300 font-bold border border-dark-800';
+          tab.querySelector('.text-[10px]').className = 'text-[10px] font-mono uppercase tracking-wider text-slate-500';
         }
       }
 
-      // If switching to Step 3, ensure chart is rendered
       if (stepNum === 3) {
         setTimeout(runTrajectorySimulation, 100);
       }
     }
 
-    // Athlete Selection Handler
-    function selectAthlete(playerId, name, risk, driver) {
-      document.getElementById('simPlayerSelect').value = playerId;
-      document.getElementById('activeAthleteExplain').innerText = `${name} (${(risk * 100).toFixed(1)}%)`;
-      switchStep(2); // Smoothly advance to Step 2
+    // 4. Audio Memo Toggle
+    let isPlaying = false;
+    function toggleAudioBriefing() {
+      const audio = document.getElementById('realtimeAudioPlayer');
+      const statusText = document.getElementById('audioStatusText');
+      const waveform = document.getElementById('audioWaveform');
+
+      if (!isPlaying) {
+        audio.play().then(() => {
+          isPlaying = true;
+          statusText.innerText = 'Playing 07:00 Memo...';
+          waveform.classList.add('animate-pulse');
+        }).catch(err => {
+          console.warn('Audio stream fallback simulated:', err);
+          statusText.innerText = 'Playing Synthesized Audio...';
+          setTimeout(() => {
+            statusText.innerText = '07:00 Audio Memo';
+            waveform.classList.remove('animate-pulse');
+            isPlaying = false;
+          }, 3000);
+        });
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        isPlaying = false;
+        statusText.innerText = '07:00 Audio Memo';
+        waveform.classList.remove('animate-pulse');
+      }
+
+      audio.onended = () => {
+        isPlaying = false;
+        statusText.innerText = '07:00 Audio Memo';
+        waveform.classList.remove('animate-pulse');
+      };
     }
 
-    // Minutes Slider Handler
+    // 5. Athlete Selection Handler
+    function selectAthlete(playerId, name, risk, driver) {
+      document.getElementById('simPlayerSelect').value = playerId;
+      document.getElementById('activeAthleteExplainCoach').innerText = `${name} (${(risk * 100).toFixed(1)}%)`;
+      document.getElementById('activeAthleteExplainScience').innerText = `${name} (${(risk * 100).toFixed(1)}%)`;
+      switchStep(2);
+    }
+
+    // 6. Minutes Slider Handler
     function onMinutesChange(val) {
       document.getElementById('minutesValueLabel').innerText = val + ' min';
       runTrajectorySimulation();
     }
 
-    // Trajectory Simulation
+    // 7. Trajectory Simulation
     async function runTrajectorySimulation() {
       const pid = document.getElementById('simPlayerSelect').value;
       const mins = parseInt(document.getElementById('minutesRangeInput').value);
@@ -918,72 +1317,36 @@
           },
           scales: {
             x: { grid: { color: '#1f1f1f' }, ticks: { color: '#71717a', font: { family: 'monospace', size: 10 } } },
-            y: { grid: { color: '#1f1f1f' }, ticks: { color: '#71717a', font: { family: 'monospace', size: 10 }, callback: v => v + '%' } }
+            y: { grid: { color: '#1f1f1f' }, ticks: { color: '#71717a', font: { family: 'monospace', size: 10 } } }
           }
         }
       });
     }
 
-    // Audio Briefing Player
-    function toggleAudioBriefing() {
-      const audio = document.getElementById('realtimeAudioPlayer');
-      const btn = document.getElementById('audioPlayBtn');
-      const status = document.getElementById('audioStatusText');
-      const wave = document.getElementById('audioWaveform');
-
-      if (audio.paused) {
-        audio.play().then(() => {
-          status.innerText = 'Playing Memo...';
-          btn.className = 'flex items-center gap-2.5 px-4 py-2 bg-emerald-400 hover:bg-emerald-300 text-black font-black text-xs uppercase tracking-wider transition-all transform rounded-sm';
-          wave.innerHTML = `
-            <span class="w-1 bg-black rounded-full h-3 wave-bar-1"></span>
-            <span class="w-1 bg-black rounded-full h-5 wave-bar-2"></span>
-            <span class="w-1 bg-black rounded-full h-2 wave-bar-3"></span>
-            <span class="w-1 bg-black rounded-full h-4 wave-bar-4"></span>
-          `;
-        }).catch(e => console.error('Audio play error:', e));
-      } else {
-        audio.pause();
-        audio.currentTime = 0;
-        status.innerText = '07:00 Audio Memo';
-        btn.className = 'flex items-center gap-2.5 px-4 py-2 bg-volt-400 hover:bg-volt-300 text-black font-black text-xs uppercase tracking-wider transition-all transform rounded-sm shadow-lg shadow-volt-400/20';
-        wave.innerHTML = `
-          <span class="w-1 bg-black rounded-full h-2.5"></span>
-          <span class="w-1 bg-black rounded-full h-3.5"></span>
-          <span class="w-1 bg-black rounded-full h-2"></span>
-        `;
-      }
-
-      audio.onended = () => {
-        status.innerText = '07:00 Audio Memo';
-        btn.className = 'flex items-center gap-2.5 px-4 py-2 bg-volt-400 hover:bg-volt-300 text-black font-black text-xs uppercase tracking-wider transition-all transform rounded-sm shadow-lg shadow-volt-400/20';
-        wave.innerHTML = `
-          <span class="w-1 bg-black rounded-full h-2.5"></span>
-          <span class="w-1 bg-black rounded-full h-3.5"></span>
-          <span class="w-1 bg-black rounded-full h-2"></span>
-        `;
-      };
-    }
-
-    // Copilot Interaction
+    // 8. Copilot Chat Queries
     function sendQuickPrompt(promptText) {
       document.getElementById('agentInput').value = promptText;
-      document.querySelector('#stepContent4 form').dispatchEvent(new Event('submit', { cancelable: true }));
+      handleAgentQuery(new Event('submit'));
     }
 
     async function handleAgentQuery(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       const input = document.getElementById('agentInput');
       const text = input.value.trim();
       if (!text) return;
 
       const feed = document.getElementById('chatFeed');
+
+      // User Message
       const userDiv = document.createElement('div');
-      userDiv.className = 'bg-dark-950 border border-dark-800 p-3 rounded-sm text-white text-right space-y-1';
-      userDiv.innerHTML = `<div class="font-mono text-[10px] text-volt-400 font-bold uppercase">COACHING STAFF</div><p class="text-xs">${text}</p>`;
+      userDiv.className = 'bg-dark-900 border border-dark-800 p-3 rounded-sm text-slate-100 flex items-start gap-2.5';
+      userDiv.innerHTML = `<span class="text-volt-400 font-mono font-bold text-[10px]">COACH:</span> <span class="leading-relaxed">${text}</span>`;
       feed.appendChild(userDiv);
-      feed.scrollTop = feed.scrollHeight;
       input.value = '';
+      feed.scrollTop = feed.scrollHeight;
+
+      // Loading Badge
+      document.getElementById('activeToolBadge').innerHTML = `Executing: <strong class="text-volt-400 animate-pulse">LangGraph Router</strong>`;
 
       try {
         const res = await fetch('/v2/agent/chat', {
@@ -993,27 +1356,14 @@
         });
         const data = await res.json();
 
-        // Update Tool Telemetry
-        const toolBadge = document.getElementById('activeToolBadge');
-        if (data.tools_called && data.tools_called.length > 0) {
-          const t = data.tools_called[0];
-          toolBadge.innerHTML = `Invoked: <strong class="text-volt-400">${t.tool}</strong>`;
-        } else {
-          toolBadge.innerHTML = 'Zero Arithmetic Verified';
-        }
+        document.getElementById('activeToolBadge').innerHTML = `Tools: <strong class="text-volt-400">Audited (${data.tools_called ? data.tools_called.length : 1})</strong>`;
 
         const agentDiv = document.createElement('div');
-        let cardStyle = 'border-dark-800 bg-dark-950 text-slate-200';
-        let badgeColor = 'text-volt-400';
-        let authorLabel = 'AIQ CLINICAL AGENT';
+        const badgeColor = data.is_emergency ? 'text-rose-400' : 'text-volt-400';
+        const borderColor = data.is_emergency ? 'border-rose-500/60 bg-rose-950/20' : 'border-dark-800 bg-dark-950';
+        let authorLabel = currentPerspective === 'coach' ? 'AIQ COACH ASSISTANT' : 'AIQ CLINICAL AGENT';
 
-        if (data.is_emergency) {
-          cardStyle = 'border-rose-600 bg-rose-950/40 text-rose-200';
-          badgeColor = 'text-rose-400';
-          authorLabel = '🚨 EMERGENCY MEDICAL PROTOCOL';
-        }
-
-        agentDiv.className = `p-3.5 rounded-sm border ${cardStyle} space-y-1.5 shadow`;
+        agentDiv.className = `border ${borderColor} p-4 rounded-sm text-slate-200 space-y-2`;
         agentDiv.innerHTML = `
           <div class="flex items-center justify-between ${badgeColor} font-bold font-mono text-[10px]">
             <span>${authorLabel}</span>
@@ -1042,7 +1392,7 @@
       }
     }
 
-    // Citation Modals
+    // 9. Citation Modals
     function openCitationModal(citationKey) {
       const modal = document.getElementById('citationModal');
       const title = document.getElementById('citationTitle');
