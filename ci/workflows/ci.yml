@@ -1,0 +1,47 @@
+name: AthleteIQ 2.0 CI & Safety Eval Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-eval-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv and Dependencies
+        run: |
+          pip install uv
+          uv venv /opt/venv
+          source /opt/venv/bin/activate
+          uv pip install .[ml,agent]
+
+      - name: Run Ruff Linting Check
+        run: |
+          source /opt/venv/bin/activate
+          ruff check .
+
+      - name: Run Point-in-Time Leakage Unit Tests
+        run: |
+          source /opt/venv/bin/activate
+          pytest tests/test_features_leakage.py -v
+
+      - name: Run Full Test Suite
+        run: |
+          source /opt/venv/bin/activate
+          pytest tests/ -v
+
+      - name: Run Independent Safety Eval Gate (Hard Fail on < 100% Emergency Recall)
+        run: |
+          source /opt/venv/bin/activate
+          pytest tests/test_evals.py -v
